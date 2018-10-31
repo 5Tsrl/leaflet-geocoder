@@ -62,6 +62,7 @@ var Geocoder = L.Control.extend({
     focus: true,
     layers: null,
     panToPoint: true,
+    alwaysPointIcon: true,
     pointIcon: true, // 'images/point_icon.png',
     polygonIcon: true, // 'images/polygon_icon.png',
     fullWidth: 650,
@@ -478,6 +479,15 @@ var Geocoder = L.Control.extend({
     var polygonIcon = this.options.polygonIcon;
     var classPrefix = 'leaflet-pelias-layer-icon-';
 
+    // raf per usarlo con geococker, che non restituisce layer,
+    // facendo in modo che il leaflet-geocoder visualizzi sempre l'icon del punto
+    if(this.options.alwaysPointIcon) {
+      return {
+          type: 'class',
+          value: classPrefix + 'point'
+        };
+    }
+
     if (layer.match('venue') || layer.match('address')) {
       if (pointIcon === true) {
         return {
@@ -555,7 +565,8 @@ var Geocoder = L.Control.extend({
         layerIcon.title = 'layer: ' + feature.properties.layer;
       }
 
-      resultItem.innerHTML += this.highlight(feature.properties.label, input);
+      // 5t per geococker resultItem.innerHTML += this.highlight(feature.properties.label, input);
+      resultItem.innerHTML += this.highlight(feature.properties.hint, input);
     }
   },
 
