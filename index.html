@@ -49,7 +49,12 @@
         layers: ['coarse','venue'/*, 'address'*/],
         autocomplete: true,
         fullWidth: 650,
-        expanded: true
+        expanded: true,
+        attribution: 'Geocoding by <a href="www.muoversinpiemonte.it">www.muoversinpiemonte.it</a>',
+        placeholder: 'cerca indirizzo',
+        markers: {
+          draggable: true
+        }
       }).addTo(map);
 
       // Focus to geocoder input

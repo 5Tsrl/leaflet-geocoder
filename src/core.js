@@ -481,11 +481,11 @@ var Geocoder = L.Control.extend({
 
     // raf per usarlo con geococker, che non restituisce layer,
     // facendo in modo che il leaflet-geocoder visualizzi sempre l'icon del punto
-    if(this.options.alwaysPointIcon) {
+    if (this.options.alwaysPointIcon) {
       return {
-          type: 'class',
-          value: classPrefix + 'point'
-        };
+        type: 'class',
+        value: classPrefix + 'point'
+      };
     }
 
     if (layer.match('venue') || layer.match('address')) {
@@ -595,16 +595,28 @@ var Geocoder = L.Control.extend({
   },
 
   showMarker: function (text, latlng) {
+    var self = this;
     this._map.setView(latlng, this._map.getZoom() || 8);
 
     var markerOptions = (typeof this.options.markers === 'object') ? this.options.markers : {};
 
     if (this.options.markers) {
-      var marker = new L.marker(latlng, markerOptions).bindPopup(text); // eslint-disable-line new-cap
+      var marker = new L.marker(latlng, markerOptions).bindPopup(self.printLatLng(latlng)); // eslint-disable-line new-cap
+      // 5t
+      marker.on('dragend', function (event) {
+        var newPos = event.target.getLatLng();
+        this.bindPopup(self.printLatLng(newPos)).openPopup();
+      });
+
       this._map.addLayer(marker);
       this.markers.push(marker);
       marker.openPopup();
     }
+  },
+
+  printLatLng: function (latLngObj) {
+    var coords = latLngObj.lat.toFixed(4) + ',' + latLngObj.lng.toFixed(4);
+    return '<span style="margin: 0 10px; font-size: 1.3em">' + coords + '</span>';
   },
 
   /**
